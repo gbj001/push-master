@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinliangjishipin.pushwms.mapper.AlipayBillExtendMapper">
+    <resultMap id="alipayBillExtendMap" type="com.xinliangjishipin.pushwms.entity.AlipayBillExtend">
+        <result property="billNo" column="bill_no"/>
+        <result property="businessNo" column="business_no"/>
+        <result property="tradeTime" column="trade_time"/>
+        <result property="sourceName" column="source_name"/>
+        <result property="sourceAccount" column="source_account"/>
+        <result property="incomeAmount" column="income_amount"/>
+        <result property="businessType" column="business_type"/>
+        <result property="remark" column="remark"/>
+        <result property="importType" column="import_type"/>
+        <result property="createdUser" column="created_user"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedUser" column="updated_user"/>
+        <result property="updatedTime" column="updated_time"/>
+        <result property="matchStatus" column="match_status"/>
+        <result property="matchContent" column="match_content"/>
+        <result property="matchCustomerCode" column="match_customer_code"/>
+        <result property="matchCustomerName" column="match_customer_name"/>
+        <result property="requestStatus" column="request_status"/>
+        <result property="requestTime" column="request_time"/>
+        <result property="requestText" column="request_text"/>
+        <result property="responseStatus" column="response_Status"/>
+        <result property="responseTime" column="response_time"/>
+        <result property="responseText" column="response_text"/>
+        <result property="verifyStatus" column="verify_Status"/>
+        <result property="verifyTime" column="verify_time"/>
+        <result property="verifyText" column="verify_text"/>
+        <result property="def1" column="def1"/>
+    </resultMap>
+
+    <select id="getByBusinessNo" parameterType="string" resultMap="alipayBillExtendMap">
+        SELECT * FROM CS_ALIPAY_BILL_EXTEND WHERE "business_no" = #{businessNo}
+    </select>
+
+    <select id="unMatchList" resultMap="alipayBillExtendMap">
+        SELECT * FROM CS_ALIPAY_BILL_EXTEND WHERE "match_status" != '1' AND "request_status" != '1'
+    </select>
+
+    <select id="sendMatchedList" resultMap="alipayBillExtendMap">
+        SELECT * FROM CS_ALIPAY_BILL_EXTEND
+        WHERE "match_status" = '1' AND "response_status" != 'Y'
+        AND to_char("trade_time",'yyyy-MM-dd') >= '2018-05-01'
+    </select>
+
+    <select id="AllAlipayBillList" parameterType="map" resultMap="alipayBillExtendMap">
+        SELECT * FROM CS_ALIPAY_BILL_EXTEND
+        <where>
+            <if test="businessNo!=null and businessNo!=''">"business_no" = #{businessNo}</if>
+            <if test="startTime!=null and startTime!=''"> AND to_char("trade_time",'yyyy-MM-dd') &gt;= #{startTime}</if>
+            <if test="endTime!=null and endTime!=''">AND to_char("trade_time",'yyyy-MM-dd') &lt;= #{endTime}</if>
+            <if test="importType!=null and importType!=''"> AND "import_type" = #{importType}</if>
+            <if test="matchStatus!=null and matchStatus!=''"> AND "match_status" = #{matchStatus}</if>
+            <if test="verifyStatus!=null and verifyStatus!=''"> AND "verify_status" = #{verifyStatus}</if>
+            <if test="responseStatus!=null and responseStatus!=''"> AND "response_status" = #{responseStatus}</if>
+        </where>
+        ORDER BY "trade_time" DESC
+    </select>
+
+    <select id="unVerifyManualAlipayAccountList" resultMap="alipayBillExtendMap">
+        SELECT * FROM CS_ALIPAY_BILL_EXTEND WHERE "import_type" = 'M' AND "verify_status" !=1 ORDER BY "created_time" DESC
+    </select>
+
+    <insert id="insertAlipayBillExtend" parameterType="com.xinliangjishipin.pushwms.entity.AlipayBillExtend">
+        INSERT INTO CS_ALIPAY_BILL_EXTEND("bill_no", "business_no", "trade_time", "source_name", "source_account", "income_amount", "business_type", "remark", "import_type", "created_user", "created_time", "updated_user", "updated_time", "match_status", "match_content", "match_customer_code", "match_customer_name", "request_status", "request_time", "request_text", "response_status", "response_time","response_text", "verify_status", "verify_time", "verify_text")
+        VALUES(#{billNo}, #{businessNo}, #{tradeTime}, #{sourceName}, #{sourceAccount}, #{incomeAmount}, #{businessType}, #{remark}, #{importType}, #{createdUser}, #{createdTime}, #{updatedUser}, #{updatedTime}, '2', '', '', '', '2', sysdate, '', 'X', sysdate, '', #{verifyStatus}, #{verifyTime}, #{verifyText})
+    </insert>
+
+    <update id="updateMatchAlipayBillExtend" parameterType="com.xinliangjishipin.pushwms.entity.AlipayBillExtend">
+        UPDATE CS_ALIPAY_BILL_EXTEND
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="updatedUser!=null and updatedUser!=''">"updated_user" = #{updatedUser},</if>
+            <if test="updatedTime!=null">"updated_time" = #{updatedTime},</if>
+            <if test="matchStatus!=null and matchStatus!=''">"match_status" = #{matchStatus},</if>
+            <if test="matchContent!=null and matchContent!=''">"match_content" = #{matchContent},</if>
+            <if test="matchCustomerCode!=null and matchCustomerCode!=''">"match_customer_code" = #{matchCustomerCode},</if>
+            <if test="matchCustomerName!=null and matchCustomerName!=''">"match_customer_name" = #{matchCustomerName},</if>
+            <if test="verifyStatus!=null and verifyStatus!=''">"verify_status" = #{verifyStatus},</if>
+            <if test="verifyTime!=null">"verify_time" = #{verifyTime},</if>
+            <if test="verifyText!=null and verifyText!=''">"verify_text" = #{verifyText},</if>
+            <if test="def1!=null and def1!=''">"def1" = #{def1}</if>
+        </trim>
+        WHERE "business_no" = #{businessNo}
+    </update>
+
+
+    <update id="updateSendAlipayBillExtend" parameterType="com.xinliangjishipin.pushwms.entity.AlipayBillExtend">
+        UPDATE CS_ALIPAY_BILL_EXTEND
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="requestStatus!=null and requestStatus!=''">"request_status" = #{requestStatus},</if>
+            <if test="requestTime!=null">"request_time" = #{requestTime},</if>
+            <if test="requestText!=null and requestText!=''">"request_text" = #{requestText},</if>
+            <if test="responseStatus!=null and responseStatus!=''">"response_status" = #{responseStatus},</if>
+            <if test="responseTime!=null">"response_time" = #{responseTime},</if>
+            <if test="responseText!=null and responseText!=''">"response_text" = #{responseText}</if>
+        </trim>
+        WHERE "business_no" = #{businessNo}
+    </update>
+
+    <update id="manualUpdateMatchStatus" parameterType="com.xinliangjishipin.pushwms.entity.AlipayBillExtend">
+        UPDATE CS_ALIPAY_BILL_EXTEND
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="matchCustomerCode!=null and matchCustomerCode!=''">"match_customer_code" = #{matchCustomerCode},</if>
+            <if test="matchCustomerName!=null and matchCustomerName!=''">"match_customer_name" = #{matchCustomerName},</if>
+            <if test="def2!=null and def2!=''">"def2" = #{def2},</if>
+            <if test="def3!=null and def3!=''">"def3" = #{def3},</if>
+            <if test="matchContent!=null and matchContent!=''">"match_content" = #{matchContent},</if>
+            <if test="matchStatus!=null and matchStatus!=''">"match_status" = #{matchStatus}</if>
+        </trim>
+        WHERE "business_no" = #{businessNo}
+    </update>
+
+</mapper>

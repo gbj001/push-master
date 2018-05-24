@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinliangjishipin.pushwms.mapper.DeliveryOrderMapper">
+    <resultMap id="deliveryOrdersMap" type="com.xinliangjishipin.pushwms.entity.DeliveryOrder">
+        <result property="pkOrder" column="pk_order"/>
+        <result property="pkOrg" column="pk_org"/>
+        <result property="billCode" column="bill_code"/>
+        <result property="orderType" column="order_type"/>
+        <result property="billDate" column="bill_date"/>
+        <result property="remark" column="remark"/>
+        <result property="receiverName" column="receiver_name"/>
+        <result property="receiverMobile" column="receiver_mobile"/>
+        <result property="receiverTel" column="receiver_tel"/>
+        <result property="receiverAddress" column="receiver_address"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="area" column="area"/>
+        <result property="customerCode" column="customer_code"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="orderSource" column="order_source"/>
+        <result property="auditTime" column="audit_time"/>
+    </resultMap>
+    <select id="getDeliveryOrders" resultMap="deliveryOrdersMap">
+    SELECT sd.cdeliveryid "pk_order", '9' "pk_org", sd.vtrantypecode "order_type", sd.vbillcode "bill_code",
+        sd.dbilldate "bill_date", sd.vnote "remark", sd.taudittime "audit_time",
+        sd.vdef10 "receiver_name", sd.vdef3 "receiver_mobile", sd.vdef4 "receiver_tel", sd.vdef8 "receiver_address",
+        sd.vdef5 "province", sd.vdef6 "city", sd.vdef7 "area", sd.vdef1 "order_source",
+        '' "customer_code", '' "customer_name"
+        FROM so_delivery sd
+        WHERE sd.fstatusflag = 2
+        --只查询审核时间往前N天的数据
+        AND sd.taudittime >= '2018-05-22'
+        AND sd.vtrantypecode = '4331-01'
+--         AND sd.taudittime > to_char(sysdate - interval '20' day,'yyyy-MM-dd')
+        AND NVL(sd.dr, 0) = 0
+--         AND sd.vbillcode in('DN2018051000000001')
+    </select>
+</mapper>

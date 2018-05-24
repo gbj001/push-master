@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinliangjishipin.pushwms.mapper.CustomerInfoMapper">
+    <resultMap id="customerInfoMap" type="com.xinliangjishipin.pushwms.entity.CustomerInfo">
+        <result property="customerId" column="customer_id"/>
+        <result property="customerCode" column="customer_code"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="defName1" column="def_name1"/>
+        <result property="defAccount1" column="def_account1"/>
+        <result property="defName2" column="def_name2"/>
+        <result property="defAccount2" column="def_account2"/>
+        <result property="defName3" column="def_name3"/>
+        <result property="defAccount3" column="def_account3"/>
+        <result property="defName4" column="def_name4"/>
+        <result property="defAccount4" column="def_account4"/>
+        <result property="defName5" column="def_name5"/>
+        <result property="defAccount5" column="def_account5"/>
+    </resultMap>
+
+    <select id="getByCustomerCode" parameterType="string" resultMap="customerInfoMap">
+        select * from V_NC_CUSTOMER WHERE "customer_code" = #{customerCode}
+    </select>
+
+    <select id="getByEmailDefAccount" parameterType="map" resultMap="customerInfoMap">
+        SELECT * FROM V_NC_CUSTOMER
+        WHERE (SUBSTR("def_account1",0,3) = #{alipayAccountPrefix} AND SUBSTR("def_account1",instr("def_account1",'@'), length("def_account1")) = #{alipayAccountSuffix})
+        OR (SUBSTR("def_account2",0,3) = #{alipayAccountPrefix} AND SUBSTR("def_account2",instr("def_account2",'@'), length("def_account2")) = #{alipayAccountSuffix})
+        OR (SUBSTR("def_account3",0,3) = #{alipayAccountPrefix} AND SUBSTR("def_account3",instr("def_account3",'@'), length("def_account3")) = #{alipayAccountSuffix})
+        OR (SUBSTR("def_account4",0,3) = #{alipayAccountPrefix} AND SUBSTR("def_account4",instr("def_account4",'@'), length("def_account4")) = #{alipayAccountSuffix})
+        OR (SUBSTR("def_account5",0,3) = #{alipayAccountPrefix} AND SUBSTR("def_account5",instr("def_account5",'@'), length("def_account5")) = #{alipayAccountSuffix})
+    </select>
+
+    <select id="getByDefAccount" parameterType="map" resultMap="customerInfoMap">
+        SELECT * FROM V_NC_CUSTOMER
+        WHERE (SUBSTR("def_account1",0,3) = #{alipayAccountPrefix} AND SUBSTR("def_account1",LENGTH("def_account1") - 3, LENGTH("def_account1")) = #{alipayAccountSuffix})
+        OR (SUBSTR("def_account2",0,3) = #{alipayAccountPrefix} AND SUBSTR("def_account2",LENGTH("def_account2") - 3, LENGTH("def_account2")) = #{alipayAccountSuffix})
+        OR (SUBSTR("def_account3",0,3) = #{alipayAccountPrefix} AND SUBSTR("def_account3",LENGTH("def_account3") - 3, LENGTH("def_account3")) = #{alipayAccountSuffix})
+        OR (SUBSTR("def_account4",0,3) = #{alipayAccountPrefix} AND SUBSTR("def_account4",LENGTH("def_account4") - 3, LENGTH("def_account4")) = #{alipayAccountSuffix})
+        OR (SUBSTR("def_account5",0,3) = #{alipayAccountPrefix} AND SUBSTR("def_account5",LENGTH("def_account5") - 3, LENGTH("def_account5")) = #{alipayAccountSuffix})
+    </select>
+
+    <select id="getByDefName" parameterType="map" resultMap="customerInfoMap">
+        SELECT * FROM V_NC_CUSTOMER
+        WHERE ("def_account1" = #{account} OR "def_account2" = #{account})
+        AND ("def_name1" like #{name} or "def_name2" like #{name} or "def_name3" like #{name} or "def_name4" like #{name} or "def_name5" like #{name})
+    </select>
+
+    <select id="getByFullAlipayAccount" parameterType="string" resultMap="customerInfoMap">
+        SELECT * FROM V_NC_CUSTOMER
+        WHERE "def_account1" = #{fullAlipayAccount}
+        OR "def_account2" = #{fullAlipayAccount}
+        OR "def_account3" = #{fullAlipayAccount}
+        OR "def_account4" = #{fullAlipayAccount}
+        OR "def_account5" = #{fullAlipayAccount}
+    </select>
+
+</mapper>

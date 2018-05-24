@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinliangjishipin.pushwms.mapper.SaleOrderMapper">
+    <resultMap id="saleOrdersMap" type="com.xinliangjishipin.pushwms.entity.SaleOrder">
+        <result property="pkOrder" column="pk_order"/>
+        <result property="pkOrg" column="pk_org"/>
+        <result property="billCode" column="bill_code"/>
+        <result property="orderType" column="order_type"/>
+        <result property="billDate" column="bill_date"/>
+        <result property="remark" column="remark"/>
+        <result property="receiverName" column="receiver_name"/>
+        <result property="receiverMobile" column="receiver_mobile"/>
+        <result property="receiverTel" column="receiver_tel"/>
+        <result property="receiverAddress" column="receiver_address"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="area" column="area"/>
+        <result property="customerCode" column="customer_code"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="orderSource" column="order_source"/>
+        <result property="auditTime" column="audit_time"/>
+    </resultMap>
+
+    <select id="getSaleOrders" resultMap="saleOrdersMap">
+        SELECT ss.csaleorderid "pk_order", os.code "pk_org", ss.vtrantypecode "order_type", ss.vbillcode "bill_code",
+        ss.dbilldate "bill_date", ss.vnote "remark", ss.taudittime "audit_time",
+        ss.vdef10 "receiver_name", ss.vdef3 "receiver_mobile", ss.vdef4 "receiver_tel", ss.vdef8 "receiver_address",
+        ss.vdef5 "province", ss.vdef6 "city", ss.vdef7 "area", ss.vdef1 "order_source",
+        bs.code "customer_code", bs.name "customer_name"
+        FROM so_saleorder ss JOIN bd_customer bs ON ss.ccustomerid = bs.pk_customer
+        JOIN org_salesorg os ON ss.pk_org = os.pk_salesorg
+        --只查询普通销售和销售试吃两种类型的销售订单
+        AND ss.vtrantypecode IN('30-01','30-Cxx-001')
+        AND ss.fstatusflag = 2
+        --只查询审核时间往前N天的数据
+        AND ss.taudittime >= '2018-05-16'
+--         AND ss.taudittime > to_char(sysdate - interval '20' day,'yyyy-MM-dd')
+        AND NVL(ss.dr, 0) = 0
+        AND NVL(bs.dr, 0) = 0
+        AND NVL(os.dr, 0) = 0
+        and ss.vbillcode in('SO302018052300000027','SO302018052200000022','SO302018052200000015')
+    </select>
+</mapper>

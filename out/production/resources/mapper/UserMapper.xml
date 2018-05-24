@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinliangjishipin.pushwms.mapper.UserMapper">
+    <resultMap id="userMap" type="com.xinliangjishipin.pushwms.entity.User">
+        <result property="userName" column="user_name"/>
+        <result property="password" column="password"/>
+        <result property="mobile" column="mobile"/>
+        <result property="realName" column="real_name"/>
+        <result property="status" column="status"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedTime" column="updated_time"/>
+    </resultMap>
+    <select id="getUser" parameterType="map" resultMap="userMap">
+        SELECT * FROM CS_USER_INFO
+        WHERE "user_name" = #{userName}
+        AND "password" = #{password}
+        AND "status" = '1'
+    </select>
+</mapper>

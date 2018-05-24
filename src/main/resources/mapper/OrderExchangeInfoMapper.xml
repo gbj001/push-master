@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinliangjishipin.pushwms.mapper.OrderExchangeInfoMapper">
+    <resultMap id="orderExchangeInfoMap" type="com.xinliangjishipin.pushwms.entity.OrderExchangeInfo">
+        <result property="outOrderId" column="out_order_id"/>
+        <result property="orderType" column="order_type"/>
+        <result property="pushCount" column="push_count"/>
+        <result property="pushProcessCount" column="push_process_count"/>
+        <result property="pushStatus" column="push_status"/>
+        <result property="pushChannel" column="push_channel"/>
+        <result property="createdUser" column="created_user"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedUser" column="updated_user"/>
+        <result property="updatedTime" column="updated_time"/>
+        <result property="requestContent" column="request_content"/>
+        <result property="responseTime" column="response_time"/>
+        <result property="responseContent" column="response_content"/>
+    </resultMap>
+
+    <select id="getByOutOrderId" parameterType="string" resultMap="orderExchangeInfoMap">
+        SELECT * FROM CS_ORDER_EXCHANGE_INFO WHERE trim("out_order_id") = #{outOrderId}
+    </select>
+
+    <select id="failPushOrderList" resultMap="orderExchangeInfoMap">
+        SELECT * FROM CS_ORDER_EXCHANGE_INFO WHERE "push_status" = '0' AND to_char("created_time",'yyyy-MM-dd') >= '2018-05-16'
+    </select>
+
+    <insert id="insertOrderExchangeInfo" parameterType="com.xinliangjishipin.pushwms.entity.OrderExchangeInfo">
+        INSERT INTO CS_ORDER_EXCHANGE_INFO("out_order_id", "order_type", "push_count", "push_process_count", "push_status", "created_user", "created_time", "updated_user", "updated_time", "request_content","response_content","response_time")
+        VALUES (#{outOrderId}, #{orderType}, #{pushCount}, #{pushProcessCount}, #{pushStatus}, #{createdUser}, #{createdTime}, #{updatedUser}, #{updatedTime}, #{requestContent}, #{responseContent}, #{responseTime})
+    </insert>
+
+    <update id="updateOrderExchangeInfo" parameterType="com.xinliangjishipin.pushwms.entity.OrderExchangeInfo">
+        UPDATE CS_ORDER_EXCHANGE_INFO
+        SET "push_count" = "push_count" + 1,
+        "push_process_count" = #{pushProcessCount},
+        <if test="pushStatus!=null">
+            "push_status" = #{pushStatus},
+        </if>
+        <if test="pushChannel!=null">
+            "push_channel" = #{pushChannel},
+        </if>
+
+        <if test="updatedUser!=null">
+            "updated_user" = #{updatedUser},
+        </if>
+        <if test="updatedTime!=null">
+            "updated_time" = #{updatedTime},
+        </if>
+        <if test="requestContent!=null">
+            "request_content" = #{requestContent},
+        </if>
+        <if test="responseContent!=null">
+            "response_content" = #{responseContent},
+        </if>
+        <if test="responseTime!=null">
+            "response_time" = #{responseTime}
+        </if>
+        WHERE "out_order_id" = #{outOrderId}
+    </update>
+</mapper>

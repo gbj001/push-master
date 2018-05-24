@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinliangjishipin.pushwms.mapper.WarehouseConfigMapper">
+    <resultMap id="warehouseConfigMap" type="com.xinliangjishipin.pushwms.entity.WarehouseConfig">
+        <result property="wmsName" column="wms_name"/>
+        <result property="wmsShort" column="wms_short"/>
+        <result property="wmsWarehouseCode" column="wms_warehouse_code"/>
+        <result property="ncWarehouseCode" column="nc_warehouse_code"/>
+        <result property="ncWarehouseName" column="nc_warehouse_mame"/>
+        <result property="flag" column="flag"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+    </resultMap>
+
+    <select id="getByNcWarehouseCode" parameterType="string" resultMap="warehouseConfigMap">
+        SELECT * FROM cs_warehouse_config WHERE "flag" = '1' AND "nc_warehouse_code" = #{warehouseCode}
+    </select>
+</mapper>

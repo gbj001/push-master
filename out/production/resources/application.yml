@@ -1,0 +1,269 @@
+spring:
+  profiles:
+    active: prod
+---
+spring:
+  profiles: dev
+  datasource:
+      driver-class-name: oracle.jdbc.OracleDriver
+      url: jdbc:oracle:thin:@218.241.158.246:8152:NCGC
+      username: xlj_0328
+      password: xlj_0328
+
+  thymeleaf:
+    mode: HTML5
+    cache: true
+    check-template: true
+    check-template-location: true
+    enabled: true
+    encoding: UTF-8
+    prefix: classpath:/templates/
+    suffix: .html
+
+server:
+  port: 8110
+  session-timeout: 60*60*24
+
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+
+logging:
+  config: classpath:logback.xml
+debug: false
+
+push.order.fail: 0  #推送失败的状态
+push.order.success: 1  #推送成功的状态
+push.order.maxcount: 10000 #推送的最大次数
+push.order.process.result.fail.maxcount: 10000 #推送返回处理结果不成功时的最大次数
+push.order.porder: 1 #采购订单
+push.order.saleOrder: 2 #普通销售订单
+push.order.saleTasteOrder: 3 #销售试吃
+push.order.saleBackOrder: 4 #退换货
+push.order.saleDeliveryOrder: 5 #发货单
+
+#各个wms系统相关配置
+wms.wj.system: WJ
+wms.wj.url: http://weijie56-union.com:801/woptest/oapi/gateway
+wms.wj.appId: xinliangji001
+wms.wj.secretKey: 13aebd22704da335b2419aeba8280533
+wms.wj.companyCode: YCWLSH
+
+wms.msp.system: MSP
+wms.msp.url: http://test1api.minimat.cn/cooperation/xinniangji/purchase/saveOrder/T56noP9U
+wms.msp.sale.url: http://test1api.minimat.cn/cooperation/xinniangji/sale/saveSaleOrder/T56noP9U
+
+wms.fl.system: FL
+wms.fl.customerId: 9
+wms.fl.url: http://60.190.139.250:38081/datahubWeb/FLUXWMSAPI/FLUXWMS_NC
+wms.fl.client.customerid: FLUXWMS_NC
+wms.fl.client.db: FLUXWMS_NC
+wms.fl.purchase.messageid: ASN
+wms.fl.sales.messageid: SO
+wms.fl.appkey: test
+wms.fl.apptoken: 80AC1A3F-F949-492C-A024-7044B28C8025
+wms.fl.appsecrt: 12345678
+
+#普通采购订单对应采购入库类型
+purchase.order.ctrantype: 45-01
+
+#支付宝对账单推送NC地址
+#send.alipay.bill.toNcUrl: http://218.241.158.245:8001/uapws/service/nc.itf.xlj.pub.IARAPService
+send.source: ALI
+send.org: 9
+
+#mail
+send.mail.maxcount: 10
+send.host: smtp.mxhichina.com
+send.port: 25
+send.username: steam@xinliangjishipin.com
+send.password: 1234qweR
+to.email: gengbeijun@xinliangjishipin.com|
+send.wms.push.mail: gengbeijun@xinliangjishipin.com|
+
+#Alipay
+alipay.serverUrl: https://openapi.alipay.com/gateway.do
+alipay.appId: 2018031502382723
+alipay.privateKey: MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDRCEzs8I1y6xML+VcnP4Sxqj/+Fi98y1knuLsNwKTXahMEBLVH4ZHrxypIdYU9BMQYEg20jeq7eMDN27udPp6yy1f+FwJyqHbaSrgp1tOtdLxEptsBYOrmIm48Vb3dND8GnBmVtFbSSRs9kjXvrlLo70EXM2ECh7B8dTZkdKlrtuyixHCV4r7LvcvzQUwdFDAfrk7SXKTLiBKXNlNk5hPfY4QSI4BKx5CUMBnJV7yT8eDOHQ/42XOK+mA829JyfEbZDNWVE+7LJvuGSvKWiJfH38LyDVUs7XWzEurbWeV57S0B+TBHbhYs8n5lC3zvcjotwi6kPWHL/GGNc1ZE4VCjAgMBAAECgf8E5iznYLvv9ZJ8tVtVkCeMAnF9gweZ5SoxxCKeL+WtJs9LSND23lKNNB3JlPeKdpIh/kpT8P+PZUUfjgbXqKAPkLR/QArOpSQj+ZxXXrGXXyUKdt6rKZpXynbK8zd/97mCbiYrXA6s3wnEZ6jb9Tn8O59K6+laJdP9FsIvmIxf+d62xDQXSXwNKX2Zn5FERowTB+/kL70cIbzJy2y+j3nkpKJO4wm2kqBc2d+z+QcrC+88opwR4GC3L+cLJBM2G8abSJVb9knnU+zK+UIvKE1GgTS8BiUMmm7ZavsJWt+ruGv9JIyQo3zQya36dYEybVqxGypCIyVtdgPyO2N/k7ECgYEA8sw0qhxqpMD7EVFcAsmsN+qu5BIFBQb/SAQfUFOKv9tYl+B1G+TC7/ObBCaNXM8jgZEopckkJ0TnPv1rPliejrxt4RC9XvjBDuSD1mCGl1IN/gz2xecjJYK3HNr+l9Di6gptzueOSophRte5jRGWEwq7vHN1jGwWiGeQXwVKQP8CgYEA3GYTTI804O8rmh0IzgTFPpxUQ2W8vcoPTfxjQWdR61RJw5t09Xagzgw1qKlV2cGfUySloXBM3a34whLrhRII7u9sLm0QQDgX53tvlXmX7f4SkAXxDCXgZ4wNupy0dzpbpLTJwy0y4uwmwYdn/otvTLoMjU6L5/CoR8X/WBZkTF0CgYEA5w6uj7S7SE7en3xts7l4yz3rceA0JrSh/EbwBeF7CVoU1XQl/oWVfgS2YRzPKqN1hrg9lof0f+pypt9ET/DF89AeQTFNBjR0hVeynzD85MSRzFNKBMwSBoB/AlbmMlP3ngKOvXhfUVCfgmuJiVZTG4v7XTwDgb7bMrRcEBFYuMECgYAIRrkAzfvhWnnbrq1u9xTlFf/ADCj7Q4QxnIGpqhSUbrTaaJMKyKqfMiwtqjY0GCZAfAbQOiRYyrilqQo5FAVL26fHUocisjiLk8IL7eX7pOfTirWTjDSSDttRH6NTOtjIJZXSA3d+t/l4mPoZv+itC+t+vu1YB1x6XYAKMcUQbQKBgQCPJMNyTnEiVnamFkDCMXp8FVDCOncIb5B06oHkmcZwVktF1MZOxQ3Tahr6cUeiioAK+vt3ZcYbqCV/RlIAmAogj2hIKy18LhlP/sKAlXQj9E3V09Fd0cVNwAHTKtTbYQ3ygSlWjnFQhdFUwLCyel6nwsOLklO/nKXnxBumXQBcag==
+alipay.publicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgFcJT51rfdU9re90MF4+8d/AGNzwu5/DXIrUnviUuEyENMRpYYoMFVc1HsjiHW9/72gkoq1X19KnE6nqqR4ESEr7rpO78OUSADkhOZ+P2If2dK7/ar1rN73CL6pRnlc4ShqCoq01RD8Bya6ncjjs2Q5DSNbostW6tXnAqoaCEO14GIVrbQXUhIdSQA/Hk9G0RNu0uVlbXQC8kQAUf34z4GCXCd8tdx2z29vv5lxuTqM7hbZHDGNOBqAzrMegQMWasRP7T9JXTVr5yMQbW4Yc8xyrj/VTkRZ5sASJbGnbshuL/V48E1+0xCeVLlD0HuvflnRKiaI7U8Cm4Yehb0Bt6QIDAQAB
+alipay.downloadPath: /Users/gengbeijun/Downloads/
+#alipay.downloadPath: /alipaybill
+
+json.trans.data.type: json
+xml.trans.data.type: xml
+---
+spring:
+  profiles: test
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@172.16.7.30:1522:NCGC
+    username: xlj_0328
+    password: xlj_0328
+  thymeleaf:
+    mode: HTML5
+    cache: true
+    check-template: true
+    check-template-location: true
+    enabled: true
+    encoding: UTF-8
+    prefix: classpath:/templates/
+    suffix: .html
+
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+
+logging:
+  config: classpath:logback.xml
+debug: false
+
+push.order.fail: 0  #推送失败的状态
+push.order.success: 1  #推送成功的状态
+push.order.maxcount: 10000 #推送的最大次数
+push.order.process.result.fail.maxcount: 10000 #推送返回处理结果不成功时的最大次数
+push.order.porder: 1 #采购订单
+push.order.saleOrder: 2 #普通销售订单
+push.order.saleTasteOrder: 3 #销售试吃
+push.order.saleBackOrder: 4 #退换货
+push.order.saleDeliveryOrder: 5 #发货单
+
+#各个wms系统相关配置
+wms.wj.system: WJ
+wms.wj.url: http://weijie56-union.com:801/woptest/oapi/gateway
+wms.wj.appId: xinliangji001
+wms.wj.secretKey: 13aebd22704da335b2419aeba8280533
+wms.wj.companyCode: YCWLSH
+
+wms.msp.system: MSP
+wms.msp.url: http://test1api.minimat.cn/cooperation/xinniangji/purchase/saveOrder/T56noP9U
+wms.msp.sale.url: http://test1api.minimat.cn/cooperation/xinniangji/sale/saveSaleOrder/T56noP9U
+
+wms.fl.system: FL
+wms.fl.customerId: 9
+wms.fl.url: http://60.190.139.250:38081/datahubWeb/FLUXWMSAPI/FLUXWMS_NC
+wms.fl.client.customerid: FLUXWMS_NC
+wms.fl.client.db: FLUXWMS_NC
+wms.fl.purchase.messageid: ASN
+wms.fl.sales.messageid: SO
+wms.fl.appkey: test
+wms.fl.apptoken: 80AC1A3F-F949-492C-A024-7044B28C8025
+wms.fl.appsecrt: 12345678
+
+
+#普通采购订单对应采购入库类型
+purchase.order.ctrantype: 45-01
+
+#支付宝对账单推送NC地址
+#send.alipay.bill.toNcUrl: http://218.241.158.245:8001/uapws/service/nc.itf.xlj.pub.IARAPService
+send.source: ALI
+send.org: 9
+
+#mail
+send.mail.maxcount: 10
+send.host: smtp.mxhichina.com
+send.port: 25
+send.username: steam@xinliangjishipin.com
+send.password: 1234qweR
+to.email: gengbeijun@xinliangjishipin.com|
+send.wms.push.mail: gengbeijun@xinliangjishipin.com|
+
+#Alipay
+alipay.serverUrl: https://openapi.alipay.com/gateway.do
+alipay.appId: 2018031502382723
+alipay.privateKey: MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDRCEzs8I1y6xML+VcnP4Sxqj/+Fi98y1knuLsNwKTXahMEBLVH4ZHrxypIdYU9BMQYEg20jeq7eMDN27udPp6yy1f+FwJyqHbaSrgp1tOtdLxEptsBYOrmIm48Vb3dND8GnBmVtFbSSRs9kjXvrlLo70EXM2ECh7B8dTZkdKlrtuyixHCV4r7LvcvzQUwdFDAfrk7SXKTLiBKXNlNk5hPfY4QSI4BKx5CUMBnJV7yT8eDOHQ/42XOK+mA829JyfEbZDNWVE+7LJvuGSvKWiJfH38LyDVUs7XWzEurbWeV57S0B+TBHbhYs8n5lC3zvcjotwi6kPWHL/GGNc1ZE4VCjAgMBAAECgf8E5iznYLvv9ZJ8tVtVkCeMAnF9gweZ5SoxxCKeL+WtJs9LSND23lKNNB3JlPeKdpIh/kpT8P+PZUUfjgbXqKAPkLR/QArOpSQj+ZxXXrGXXyUKdt6rKZpXynbK8zd/97mCbiYrXA6s3wnEZ6jb9Tn8O59K6+laJdP9FsIvmIxf+d62xDQXSXwNKX2Zn5FERowTB+/kL70cIbzJy2y+j3nkpKJO4wm2kqBc2d+z+QcrC+88opwR4GC3L+cLJBM2G8abSJVb9knnU+zK+UIvKE1GgTS8BiUMmm7ZavsJWt+ruGv9JIyQo3zQya36dYEybVqxGypCIyVtdgPyO2N/k7ECgYEA8sw0qhxqpMD7EVFcAsmsN+qu5BIFBQb/SAQfUFOKv9tYl+B1G+TC7/ObBCaNXM8jgZEopckkJ0TnPv1rPliejrxt4RC9XvjBDuSD1mCGl1IN/gz2xecjJYK3HNr+l9Di6gptzueOSophRte5jRGWEwq7vHN1jGwWiGeQXwVKQP8CgYEA3GYTTI804O8rmh0IzgTFPpxUQ2W8vcoPTfxjQWdR61RJw5t09Xagzgw1qKlV2cGfUySloXBM3a34whLrhRII7u9sLm0QQDgX53tvlXmX7f4SkAXxDCXgZ4wNupy0dzpbpLTJwy0y4uwmwYdn/otvTLoMjU6L5/CoR8X/WBZkTF0CgYEA5w6uj7S7SE7en3xts7l4yz3rceA0JrSh/EbwBeF7CVoU1XQl/oWVfgS2YRzPKqN1hrg9lof0f+pypt9ET/DF89AeQTFNBjR0hVeynzD85MSRzFNKBMwSBoB/AlbmMlP3ngKOvXhfUVCfgmuJiVZTG4v7XTwDgb7bMrRcEBFYuMECgYAIRrkAzfvhWnnbrq1u9xTlFf/ADCj7Q4QxnIGpqhSUbrTaaJMKyKqfMiwtqjY0GCZAfAbQOiRYyrilqQo5FAVL26fHUocisjiLk8IL7eX7pOfTirWTjDSSDttRH6NTOtjIJZXSA3d+t/l4mPoZv+itC+t+vu1YB1x6XYAKMcUQbQKBgQCPJMNyTnEiVnamFkDCMXp8FVDCOncIb5B06oHkmcZwVktF1MZOxQ3Tahr6cUeiioAK+vt3ZcYbqCV/RlIAmAogj2hIKy18LhlP/sKAlXQj9E3V09Fd0cVNwAHTKtTbYQ3ygSlWjnFQhdFUwLCyel6nwsOLklO/nKXnxBumXQBcag==
+alipay.publicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgFcJT51rfdU9re90MF4+8d/AGNzwu5/DXIrUnviUuEyENMRpYYoMFVc1HsjiHW9/72gkoq1X19KnE6nqqR4ESEr7rpO78OUSADkhOZ+P2If2dK7/ar1rN73CL6pRnlc4ShqCoq01RD8Bya6ncjjs2Q5DSNbostW6tXnAqoaCEO14GIVrbQXUhIdSQA/Hk9G0RNu0uVlbXQC8kQAUf34z4GCXCd8tdx2z29vv5lxuTqM7hbZHDGNOBqAzrMegQMWasRP7T9JXTVr5yMQbW4Yc8xyrj/VTkRZ5sASJbGnbshuL/V48E1+0xCeVLlD0HuvflnRKiaI7U8Cm4Yehb0Bt6QIDAQAB
+alipay.downloadPath: /Users/gengbeijun/Downloads/
+#alipay.downloadPath: /alipaybill
+
+
+json.trans.data.type: json
+xml.trans.data.type: xml
+---
+spring:
+  profiles: prod
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@172.16.7.20:1521:NCXLJ
+    username: ncxlj
+    password: ncxlj
+  thymeleaf:
+    mode: HTML5
+    cache: true
+    check-template: true
+    check-template-location: true
+    enabled: true
+    encoding: UTF-8
+    prefix: classpath:/templates/
+    suffix: .html
+
+server:
+  port: 8110
+  session-timeout: 60*60*24
+
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+
+logging:
+  config: classpath:logback.xml
+debug: false
+
+push.order.fail: 0  #推送失败的状态
+push.order.success: 1  #推送成功的状态
+push.order.maxcount: 10000 #推送的最大次数
+push.order.process.result.fail.maxcount: 10000 #推送返回处理结果不成功时的最大次数
+push.order.porder: 1 #采购订单
+push.order.saleOrder: 2 #普通销售订单
+push.order.saleTasteOrder: 3 #销售试吃
+push.order.saleBackOrder: 4 #退换货
+push.order.saleDeliveryOrder: 5 #发货单
+
+#各个wms系统相关配置
+wms.wj.system: WJ
+wms.wj.url: http://weijie56-union.com/wop/oapi/gateway
+wms.wj.appId: xinliangji001
+wms.wj.secretKey: 13aebd22704da335b2419aeba8280533
+wms.wj.companyCode: YCWLSH
+
+wms.msp.system: MSP
+wms.msp.url: http://openapi.minimat.cn/cooperation/xinniangji/purchase/saveOrder/5Im9PV5D
+wms.msp.sale.url: http://openapi.minimat.cn/cooperation/xinniangji/sale/saveSaleOrder/5Im9PV5D
+
+
+wms.fl.system: FL
+wms.fl.customerId: 9
+wms.fl.url: http://60.190.139.250:28080/datahubWeb/FLUXWMSAPI/FLUXWMS_NC
+wms.fl.client.customerid: FLUXWMS_NC
+wms.fl.client.db: FLUXWMS_NC
+wms.fl.purchase.messageid: ASN
+wms.fl.sales.messageid: SO
+wms.fl.appkey: test
+wms.fl.apptoken: 80AC1A3F-F949-492C-A024-7044B28C8025
+wms.fl.appsecrt: 12345678
+
+
+#普通采购订单对应采购入库类型
+purchase.order.ctrantype: 45-01
+
+#支付宝对账单推送NC地址
+#send.alipay.bill.toNcUrl: http://218.241.158.245:8001/uapws/service/nc.itf.xlj.pub.IARAPService
+send.source: ALI
+send.org: 9
+
+#mail
+send.mail.maxcount: 10
+send.host: smtp.mxhichina.com
+send.port: 25
+send.username: steam@xinliangjishipin.com
+send.password: 1234qweR
+to.email: gengbeijun@xinliangjishipin.com|
+send.wms.push.mail: gaozhiwen@xinliangjishipin.com|wangwei@xinliangjishipin.com|zhuwangwang@xinliangjishipin.com|yangyingchuan@xinliangjishipin.com|zhuhongdan@xinliangjishipin.com|gengbeijun@xinliangjishipin.com|
+
+#Alipay
+alipay.serverUrl: https://openapi.alipay.com/gateway.do
+alipay.appId: 2018031502382723
+alipay.privateKey: MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDRCEzs8I1y6xML+VcnP4Sxqj/+Fi98y1knuLsNwKTXahMEBLVH4ZHrxypIdYU9BMQYEg20jeq7eMDN27udPp6yy1f+FwJyqHbaSrgp1tOtdLxEptsBYOrmIm48Vb3dND8GnBmVtFbSSRs9kjXvrlLo70EXM2ECh7B8dTZkdKlrtuyixHCV4r7LvcvzQUwdFDAfrk7SXKTLiBKXNlNk5hPfY4QSI4BKx5CUMBnJV7yT8eDOHQ/42XOK+mA829JyfEbZDNWVE+7LJvuGSvKWiJfH38LyDVUs7XWzEurbWeV57S0B+TBHbhYs8n5lC3zvcjotwi6kPWHL/GGNc1ZE4VCjAgMBAAECgf8E5iznYLvv9ZJ8tVtVkCeMAnF9gweZ5SoxxCKeL+WtJs9LSND23lKNNB3JlPeKdpIh/kpT8P+PZUUfjgbXqKAPkLR/QArOpSQj+ZxXXrGXXyUKdt6rKZpXynbK8zd/97mCbiYrXA6s3wnEZ6jb9Tn8O59K6+laJdP9FsIvmIxf+d62xDQXSXwNKX2Zn5FERowTB+/kL70cIbzJy2y+j3nkpKJO4wm2kqBc2d+z+QcrC+88opwR4GC3L+cLJBM2G8abSJVb9knnU+zK+UIvKE1GgTS8BiUMmm7ZavsJWt+ruGv9JIyQo3zQya36dYEybVqxGypCIyVtdgPyO2N/k7ECgYEA8sw0qhxqpMD7EVFcAsmsN+qu5BIFBQb/SAQfUFOKv9tYl+B1G+TC7/ObBCaNXM8jgZEopckkJ0TnPv1rPliejrxt4RC9XvjBDuSD1mCGl1IN/gz2xecjJYK3HNr+l9Di6gptzueOSophRte5jRGWEwq7vHN1jGwWiGeQXwVKQP8CgYEA3GYTTI804O8rmh0IzgTFPpxUQ2W8vcoPTfxjQWdR61RJw5t09Xagzgw1qKlV2cGfUySloXBM3a34whLrhRII7u9sLm0QQDgX53tvlXmX7f4SkAXxDCXgZ4wNupy0dzpbpLTJwy0y4uwmwYdn/otvTLoMjU6L5/CoR8X/WBZkTF0CgYEA5w6uj7S7SE7en3xts7l4yz3rceA0JrSh/EbwBeF7CVoU1XQl/oWVfgS2YRzPKqN1hrg9lof0f+pypt9ET/DF89AeQTFNBjR0hVeynzD85MSRzFNKBMwSBoB/AlbmMlP3ngKOvXhfUVCfgmuJiVZTG4v7XTwDgb7bMrRcEBFYuMECgYAIRrkAzfvhWnnbrq1u9xTlFf/ADCj7Q4QxnIGpqhSUbrTaaJMKyKqfMiwtqjY0GCZAfAbQOiRYyrilqQo5FAVL26fHUocisjiLk8IL7eX7pOfTirWTjDSSDttRH6NTOtjIJZXSA3d+t/l4mPoZv+itC+t+vu1YB1x6XYAKMcUQbQKBgQCPJMNyTnEiVnamFkDCMXp8FVDCOncIb5B06oHkmcZwVktF1MZOxQ3Tahr6cUeiioAK+vt3ZcYbqCV/RlIAmAogj2hIKy18LhlP/sKAlXQj9E3V09Fd0cVNwAHTKtTbYQ3ygSlWjnFQhdFUwLCyel6nwsOLklO/nKXnxBumXQBcag==
+alipay.publicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgFcJT51rfdU9re90MF4+8d/AGNzwu5/DXIrUnviUuEyENMRpYYoMFVc1HsjiHW9/72gkoq1X19KnE6nqqR4ESEr7rpO78OUSADkhOZ+P2If2dK7/ar1rN73CL6pRnlc4ShqCoq01RD8Bya6ncjjs2Q5DSNbostW6tXnAqoaCEO14GIVrbQXUhIdSQA/Hk9G0RNu0uVlbXQC8kQAUf34z4GCXCd8tdx2z29vv5lxuTqM7hbZHDGNOBqAzrMegQMWasRP7T9JXTVr5yMQbW4Yc8xyrj/VTkRZ5sASJbGnbshuL/V48E1+0xCeVLlD0HuvflnRKiaI7U8Cm4Yehb0Bt6QIDAQAB
+alipay.downloadPath: /Users/gengbeijun/Downloads/
+#alipay.downloadPath: /alipaybill
+
+
+json.trans.data.type: json
+xml.trans.data.type: xml

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinliangjishipin.pushwms.mapper.PurchaseOrderMapper">
+    <resultMap id="purchaseOrdersMap" type="com.xinliangjishipin.pushwms.entity.PurchaseOrder">
+        <result property="pkOrder" column="pk_order"/>
+        <result property="billCode" column="bill_code"/>
+        <result property="ownerId" column="owner_id"/>
+        <result property="pkSupplierName" column="pk_supplier_name"/>
+        <result property="pkSupplierCode" column="pk_supplier_code"/>
+        <result property="bReturn" column="breturn"/>
+        <result property="vTranTypeCode" column="vtrantypecode"/>
+        <result property="auditTime" column="audit_time"/>
+    </resultMap>
+    <select id="getPurchaseOrders" resultMap="purchaseOrdersMap">
+        SELECT pk_order "pk_order", vbillcode "bill_code", po_order.pk_org "owner_id", dmakedate "dmakedate",
+        po_order.pk_supplier "pk_supplier_code", bd_supplier.name "pk_supplier_name", po_order.breturn "breturn",
+        bd_billtype.pk_billtypecode "vtrantypecode", po_order.taudittime "audit_time"
+        FROM po_order JOIN bd_supplier ON bd_supplier.pk_supplier = po_order.pk_supplier
+        JOIN bd_billtype ON po_order.ctrantypeid = bd_billtype.pk_billtypeid
+        WHERE po_order.forderstatus ='3'
+        AND NVL(po_order.dr, 0) = 0
+        AND NVL(bd_supplier.dr,0) = 0
+        AND taudittime >= '2018-05-16'
+--         AND taudittime > to_char(sysdate - interval '20' day,'yyyy-MM-dd')
+        -- 信良记
+        AND po_order.pk_org='0001A110000000002J9T'
+        -- 普通采购
+        AND po_order.ctrantypeid = '1001A1100000000010WP'
+    </select>
+</mapper>

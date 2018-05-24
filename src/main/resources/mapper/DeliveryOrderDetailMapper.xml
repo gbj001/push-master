@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinliangjishipin.pushwms.mapper.DeliveryOrderDetailMapper">
+    <resultMap id="deliveryOrderDetailMap" type="com.xinliangjishipin.pushwms.entity.DeliveryOrderDetail">
+        <result property="isGift" column="is_gift"/>
+        <result property="warehouseCode" column="warehouse_code"/>
+        <result property="materialCode" column="material_code"/>
+        <result property="materialSpec" column="material_spec"/>
+        <result property="materialName" column="material_name"/>
+        <result property="quantity" column="quantity"/>
+        <result property="quantityUnits" column="quantity_units"/>
+        <result property="mainQuantity" column="main_quantity"/>
+        <result property="mainQuantityUnits" column="main_quantity_units"/>
+        <result property="transRate" column="trans_rate"/>
+        <result property="pkOrderHeader" column="pk_order_header"/>
+        <result property="pkOrderBody" column="pk_order_body"/>
+        <result property="crowNo" column="crow_no"/>
+    </resultMap>
+    <select id="getDeliveryOrderDetail" parameterType="string" resultMap="deliveryOrderDetailMap">
+        SELECT CASE WHEN blargessflag='N' THEN '0' ELSE '1' END "is_gift", bd_stordoc.code "warehouse_code",
+        bd_material.code "material_code", bd_material.materialspec "material_spec", bd_material.name "material_name",
+        so_delivery_b.nastnum "quantity",
+        (select name from bd_measdoc where bd_measdoc.pk_measdoc=so_delivery_b.castunitid ) "quantity_units",
+        so_delivery_b.nnum "main_quantity",
+        (select name from bd_measdoc where bd_measdoc.pk_measdoc=so_delivery_b.cunitid ) "main_quantity_units",
+        so_delivery_b.vchangerate "trans_rate", so_delivery_b.crowno "crow_no",
+        so_delivery_b.cdeliveryid "pk_order_header", so_delivery_b.cdeliverybid "pk_order_body"
+        FROM so_delivery_b
+        INNER JOIN bd_stordoc ON so_delivery_b.csendstordocid = bd_stordoc.pk_stordoc
+        INNER JOIN bd_material ON so_delivery_b.cmaterialvid = bd_material.pk_material
+        INNER JOIN bd_measdoc ON so_delivery_b.castunitid = bd_measdoc.pk_measdoc
+        WHERE 1=1
+        AND NVL(so_delivery_b.dr, 0) = 0
+        AND NVL(bd_stordoc.dr, 0) = 0
+        AND NVL(bd_material.dr, 0) = 0
+        AND NVL(bd_measdoc.dr, 0) = 0
+        AND bd_stordoc.enablestate = 2
+        AND bd_material.enablestate = 2
+        AND so_delivery_b.cdeliveryid=#{pkOrder}
+        ORDER BY  so_delivery_b.crowno
+    </select>
+</mapper>

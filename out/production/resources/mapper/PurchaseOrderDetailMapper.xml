@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinliangjishipin.pushwms.mapper.PurchaseOrderDetailMapper">
+    <resultMap id="purchaseOrderDetailMap" type="com.xinliangjishipin.pushwms.entity.PurchaseOrderDetail">
+        <result property="isGift" column="is_gift"/>
+        <result property="warehouseCode" column="warehouse_code"/>
+        <result property="materialCode" column="material_code"/>
+        <result property="materialSpec" column="material_spec"/>
+        <result property="materialName" column="material_name"/>
+        <result property="quantity" column="quantity"/>
+        <result property="quantityUnits" column="quantity_units"/>
+        <result property="mainQuantity" column="main_quantity"/>
+        <result property="mainQuantityUnits" column="main_quantity_units"/>
+        <result property="transRate" column="trans_rate"/>
+        <result property="pkOrderHeader" column="pk_order_header"/>
+        <result property="pkOrderBody" column="pk_order_body"/>
+        <result property="crowNo" column="crow_no"/>
+    </resultMap>
+    <select id="getPurchaseOrderDetail" parameterType="string" resultMap="purchaseOrderDetailMap">
+        SELECT CASE WHEN blargess='N' THEN '0' ELSE '1' END "is_gift", bd_stordoc.code "warehouse_code",
+        bd_material.code "material_code", bd_material.materialspec "material_spec", bd_material.name "material_name",
+        po_order_b.nastnum "quantity",
+        (select name from bd_measdoc where bd_measdoc.pk_measdoc=po_order_b.castunitid ) "quantity_units",
+        po_order_b.nnum "main_quantity",
+        (select name from bd_measdoc where bd_measdoc.pk_measdoc=po_order_b.cunitid ) "main_quantity_units",
+        po_order_b.vchangerate "trans_rate", po_order_b.crowno "crow_no",
+        po_order_b.pk_order "pk_order_header", po_order_b.pk_order_b "pk_order_body"
+        FROM po_order_b
+        INNER JOIN po_order ON po_order_b.pk_order = po_order.pk_order
+        INNER JOIN bd_stordoc ON po_order_b.pk_recvstordoc = bd_stordoc.pk_stordoc
+        INNER JOIN bd_material ON po_order_b.pk_material = bd_material.pk_material
+        INNER JOIN bd_measdoc ON po_order_b.castunitid = bd_measdoc.pk_measdoc
+        WHERE 1 = 1
+        AND NVL(po_order_b.dr, 0) = 0
+        AND NVL(bd_stordoc.dr, 0) = 0
+        AND NVL(bd_material.dr, 0) = 0
+        AND NVL(bd_measdoc.dr, 0) = 0
+        AND bd_stordoc.enablestate = 2
+        AND bd_material.enablestate = 2
+        AND po_order_b.pk_order=#{pkOrder}
+    </select>
+</mapper>
